@@ -537,40 +537,21 @@ function Register() {
                 {/* User Type Selection */}
                 <div className="field">
                   <label htmlFor="userType" className="field-label">I want to register as:</label>
-                  <div className="user-type-options">
-                    <label className="user-type-option">
-                      <input
-                        type="radio"
-                        name="userType"
-                        value="Student"
-                        checked={formData.userType === 'Student'}
-                        onChange={handleInputChange}
-                      />
-                      <span className="option-text">Student</span>
-                    </label>
-                    <label className="user-type-option">
-                      <input
-                        type="radio"
-                        name="userType"
-                        value="Vendor"
-                        checked={formData.userType === 'Vendor'}
-                        onChange={handleInputChange}
-                      />
-                      <span className="option-text">Vendor</span>
-                    </label>
-                    <label className="user-type-option">
-                      <input
-                        type="radio"
-                        name="userType"
-                        value="Point Seller"
-                        checked={formData.userType === 'Point Seller'}
-                        onChange={handleInputChange}
-                      />
-                      <span className="option-text">Point Seller</span>
-                    </label>
-                  </div>
+                  <select
+                    id="userType"
+                    name="userType"
+                    className="input"
+                    value={formData.userType}
+                    onChange={handleInputChange}
+                    aria-invalid={Boolean(errors.userType)}
+                    aria-describedby="userType-error"
+                  >
+                    <option value="">Select user type</option>
+                    <option value="Student">Student</option>
+                    <option value="Vendor">Vendor</option>
+                  </select>
                   {errors.userType && (
-                    <span className="error-message" role="alert">
+                    <span id="userType-error" className="error-message" role="alert">
                       {errors.userType}
                     </span>
                   )}

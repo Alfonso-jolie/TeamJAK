@@ -7,10 +7,10 @@ import UnionBankLogo from '../design/unionbank.png';
 import PayTapLogo from '../design/paytaplogo.png';
 
 const SECTIONS = [
-  { key: 'topup', label: 'Points Top-Up' },
-  { key: 'expense', label: 'Expense Tracking' },
-  { key: 'balance', label: 'Points Balance' },
-  { key: 'support', label: 'Support Request' },
+  { key: 'topup', label: 'Points Topup', icon: '💰' },
+  { key: 'expense', label: 'Expense Tracking', icon: '📊' },
+  { key: 'balance', label: 'Points Balance', icon: '💳' },
+  { key: 'support', label: 'Support Request', icon: '❓' },
 ];
 
 function Dashboard() {
@@ -93,7 +93,8 @@ function Dashboard() {
               className={`nav-link ${active === s.key ? 'active' : ''}`}
               onClick={() => setActive(s.key)}
             >
-              {s.label}
+              <span className="nav-icon">{s.icon}</span>
+              <span className="nav-text">{s.label}</span>
             </button>
           ))}
         </nav>

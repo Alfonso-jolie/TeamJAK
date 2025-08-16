@@ -23,32 +23,44 @@
 .sidebar {
   background: #22351a;
   border-right: 1px solid rgba(0,0,0,0.2);
-  padding: var(--space-5);
+  padding: var(--space-3);
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: var(--space-5);
+  gap: var(--space-3);
 }
 
 .logo-section { display: grid; place-items: center; }
 .logo { 
-  width: clamp(120px, 18vw, 180px);
+  width: clamp(80px, 15vw, 120px);
   height: auto;
   object-fit: contain;
 }
 
-.nav-links { display: grid; gap: var(--space-3); }
+.nav-links { display: grid; gap: 2px; }
 .nav-link {
   appearance: none;
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
   text-align: left;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-1);
+  padding: 4px 8px;
+  border-radius: 0;
   color: #eaf0ea;
   background: transparent;
-  border: 1px solid transparent;
+  border: none;
   cursor: pointer;
   font-weight: 700;
+  gap: 8px;
+}
+
+.nav-icon {
+  font-size: 18px;
+  width: 20px;
+  text-align: center;
+}
+
+.nav-text {
+  text-decoration: none;
 }
 .nav-link:hover { background: rgba(255,255,255,0.06); }
 .nav-link.active {

@@ -7,29 +7,18 @@ function StudentDashboard() {
 
   if (showDashboard) {
     return (
-      <Suspense fallback={<div style={{ padding: 24 }}>Loading dashboard…</div>}>
+      <Suspense fallback={<div className="loading-container">Loading dashboard…</div>}>
         <Dashboard />
       </Suspense>
     );
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'grid',
-      placeItems: 'center',
-      background: '#f7f9f7'
-    }}>
-      <div style={{
-        background: '#ffffff',
-        borderRadius: 16,
-        border: '1px solid rgba(0,0,0,0.12)',
-        padding: 24,
-        boxShadow: '0 8px 24px rgba(0,0,0,0.06)'
-      }}>
-        <h2 style={{ margin: 0, color: '#314528' }}>Student Dashboard</h2>
-        <p style={{ marginTop: 8 }}>Welcome! You have successfully logged in.</p>
-        <button onClick={() => setShowDashboard(true)} className="btn-primary" style={{ marginTop: 12 }}>
+    <div className="student-dashboard-page">
+      <div className="student-dashboard-card">
+        <h2 className="student-dashboard-title">Student Dashboard</h2>
+        <p className="student-dashboard-subtitle">Welcome! You have successfully logged in.</p>
+        <button onClick={() => setShowDashboard(true)} className="btn-primary student-dashboard-btn">
           Continue
         </button>
       </div>

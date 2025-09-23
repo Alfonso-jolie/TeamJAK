@@ -6,12 +6,12 @@ import GCashLogo from '../design/Gcash.png';
 import UnionBankLogo from '../design/unionbank.png';
 import PayTapLogo from '../design/paytaplogo.png';
 
-const SECTIONS = [
-  { key: 'topup', label: 'Points Topup', icon: '💰' },
-  { key: 'expense', label: 'Expense Tracking', icon: '📊' },
-  { key: 'balance', label: 'Points Balance', icon: '💳' },
-  { key: 'support', label: 'Support Request', icon: '❓' },
-];
+  const SECTIONS = [
+    { key: 'topup', label: 'Points Topup' },
+    { key: 'expense', label: 'Expense Tracking' },
+    { key: 'balance', label: 'Points Balance' },
+    { key: 'support', label: 'Support Request' },
+  ];
 
 function Dashboard() {
   const [active, setActive] = useState('topup');
@@ -51,7 +51,14 @@ function Dashboard() {
   const expenseData = allExpenseData[filter] || allExpenseData.Monthly;
 
   const handlePaymentClick = (method) => {
-    console.log(`Selected payment method: ${method}`);
+    const LINKS = {
+      GCash: 'https://www.gcash.com/',
+      UnionBank: 'https://www.unionbankph.com/',
+    };
+    const url = LINKS[method];
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   const handleLogout = () => {
@@ -93,7 +100,6 @@ function Dashboard() {
               className={`nav-link ${active === s.key ? 'active' : ''}`}
               onClick={() => setActive(s.key)}
             >
-              <span className="nav-icon">{s.icon}</span>
               <span className="nav-text">{s.label}</span>
             </button>
           ))}

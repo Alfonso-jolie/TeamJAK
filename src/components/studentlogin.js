@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './studentlogin.css';
-import PaytapImage from '../design/Paytap.png';
 
 function StudentLogin() {
   const navigate = useNavigate();
@@ -50,7 +49,6 @@ function StudentLogin() {
     <main className="login-page">
       <section className="login-card" aria-label="Student login">
         <div className="login-left">
-          <img src={PaytapImage} alt="PayTap graphic" className="brand-graphic" />
           <div className="brand-text">
             <h1 className="portal-title">PayTap | Portal</h1>
             <p className="school-name">De La Salle Lipa</p>

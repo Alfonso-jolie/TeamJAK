@@ -64,16 +64,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-6);
+  justify-content: center;
 }
 
-.brand-graphic {
-  width: clamp(96px, 20vw, 150px);
-  height: auto;
-  object-fit: contain;
-  filter: grayscale(100%);
-}
+/* Removed brand image on register page */
 
-.brand-text { display: grid; gap: var(--space-3); }
+.brand-text { display: grid; gap: var(--space-3); justify-items: center; text-align: center; }
 
 .portal-title {
   margin: 0;
@@ -116,42 +112,7 @@
   margin-bottom: var(--space-2);
 }
 
-/* User type selection */
-.user-type-options {
-  display: grid;
-  gap: var(--space-3);
-}
-
-.user-type-option {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--border-dark);
-  border-radius: var(--radius-2);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: var(--bg-card);
-}
-
-.user-type-option:hover {
-  border-color: var(--accent-green);
-  background: rgba(16, 185, 129, 0.02);
-  box-shadow: var(--shadow-light);
-}
-
-.user-type-option input[type="radio"] {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--accent-green);
-  cursor: pointer;
-}
-
-.option-text {
-  font-weight: 500;
-  color: var(--text-dark);
-  cursor: pointer;
-}
+/* Removed user type selection styles */
 
 /* Name fields layout */
 .name-fields {

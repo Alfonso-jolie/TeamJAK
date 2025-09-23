@@ -64,16 +64,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-6);
+  justify-content: center;
 }
 
-.brand-graphic {
-  width: clamp(96px, 20vw, 150px);
-  height: auto;
-  object-fit: contain;
-  filter: grayscale(100%);
-}
+/* Removed brand image */
 
-.brand-text { display: grid; gap: var(--space-3); }
+.brand-text { display: grid; gap: var(--space-3); justify-items: center; text-align: center; }
 
 .portal-title {
   margin: 0;

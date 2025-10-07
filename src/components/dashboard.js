@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './dashboard.css';
 import { useNavigate } from 'react-router-dom';
+import { QRCodeCanvas } from 'qrcode.react';
 
 import GCashLogo from '../design/Gcash.png';
 import UnionBankLogo from '../design/unionbank.png';
@@ -17,6 +18,17 @@ function Dashboard() {
   const [active, setActive] = useState('topup');
   const [filter, setFilter] = useState('Monthly');
   const navigate = useNavigate();
+  const [selectedMethod, setSelectedMethod] = useState(null);
+  const [refNo, setRefNo] = useState('');
+  const [proofPreviewUrl, setProofPreviewUrl] = useState('');
+  const [isAdmin, setIsAdmin] = useState(() => {
+    try {
+      return localStorage.getItem('role') === 'admin';
+    } catch {
+      return false;
+    }
+  });
+  const [visibleQrForRow, setVisibleQrForRow] = useState(null);
 
   const [supportForm, setSupportForm] = useState({
     name: '',
@@ -50,21 +62,31 @@ function Dashboard() {
   // Get filtered data based on selected filter
   const expenseData = allExpenseData[filter] || allExpenseData.Monthly;
 
+  const PAYMENT_NUMBERS = {
+    GCash: '0917 123 4567',
+    UnionBank: '1234-5678-9012',
+  };
+
   const handlePaymentClick = (method) => {
-    const LINKS = {
-      GCash: 'https://www.gcash.com/',
-      UnionBank: 'https://www.unionbankph.com/',
-    };
-    const url = LINKS[method];
-    if (url) {
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
+    setSelectedMethod(method);
   };
 
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
     navigate('/login');
+  };
+
+  const handleProofUpload = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    setProofPreviewUrl(url);
+  };
+
+  const clearProof = () => {
+    if (proofPreviewUrl) URL.revokeObjectURL(proofPreviewUrl);
+    setProofPreviewUrl('');
   };
 
   const validateSupport = () => {
@@ -144,6 +166,62 @@ function Dashboard() {
                 </div>
               </section>
 
+              {selectedMethod && (
+                <section className="section">
+                  <h3>Payment details</h3>
+                  <div className="form-row">
+                    <p>
+                      Send payment to {selectedMethod} number:
+                      {' '}<strong>{PAYMENT_NUMBERS[selectedMethod]}</strong>
+                    </p>
+                  </div>
+
+                  <div className="form-row">
+                    <label className="form-label" htmlFor="ref-no">Ref No. (testing)</label>
+                    <input
+                      id="ref-no"
+                      className="form-input"
+                      type="text"
+                      placeholder="Enter reference number"
+                      value={refNo}
+                      onChange={(e) => setRefNo(e.target.value)}
+                      inputMode="numeric"
+                    />
+                  </div>
+
+                  <div className="form-row">
+                    <label className="form-label" htmlFor="proof">Upload proof of payment (image)</label>
+                    <input
+                      id="proof"
+                      className="form-input"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProofUpload}
+                    />
+                  </div>
+
+                  {proofPreviewUrl && (
+                    <div className="form-row">
+                      <div className="proof-preview" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <img src={proofPreviewUrl} alt="Payment proof preview" style={{ maxHeight: 120, borderRadius: 8 }} />
+                        <button type="button" className="btn-secondary" onClick={clearProof}>Remove</button>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="form-row" style={{ marginTop: 12 }}>
+                    <label className="form-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                      <input
+                        type="checkbox"
+                        checked={isAdmin}
+                        onChange={(e) => setIsAdmin(e.target.checked)}
+                      />
+                      Admin view
+                    </label>
+                  </div>
+                </section>
+              )}
+
               {/* Transaction History */}
               <section className="section transaction-history">
                 <h2>Transaction History</h2>
@@ -154,21 +232,42 @@ function Dashboard() {
                       <th>Method</th>
                       <th>Amount</th>
                       <th>Status</th>
+                      {isAdmin && <th>QR</th>}
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>2025-08-05</td>
-                      <td>GCash</td>
-                      <td>₱500</td>
-                      <td>Completed</td>
-                    </tr>
-                    <tr>
-                      <td>2025-08-01</td>
-                      <td>UnionBank</td>
-                      <td>₱1,000</td>
-                      <td>Pending</td>
-                    </tr>
+                    {[{ date: '2025-08-05', method: 'GCash', amount: '₱500', status: 'Completed' }, { date: '2025-08-01', method: 'UnionBank', amount: '₱1,000', status: 'Pending' }].map((tx, idx) => (
+                      <tr key={idx}>
+                        <td>{tx.date}</td>
+                        <td>{tx.method}</td>
+                        <td>{tx.amount}</td>
+                        <td>{tx.status}</td>
+                        {isAdmin && (
+                          <td>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                              <button
+                                type="button"
+                                className="btn-secondary"
+                                onClick={() => setVisibleQrForRow(visibleQrForRow === idx ? null : idx)}
+                              >
+                                {visibleQrForRow === idx ? 'Hide QR' : 'Generate QR'}
+                              </button>
+                              {visibleQrForRow === idx && (
+                                <QRCodeCanvas
+                                  value={JSON.stringify({
+                                    ...tx,
+                                    recipient: PAYMENT_NUMBERS[tx.method],
+                                    refNo: refNo || undefined,
+                                  })}
+                                  size={96}
+                                  includeMargin
+                                />
+                              )}
+                            </div>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </section>

@@ -107,10 +107,40 @@ function Register() {
 
     setSubmitting(true);
     try {
-      // Simulate an API call. Replace with real registration later.
-      await new Promise((res) => setTimeout(res, 800));
+      // Persist user locally (temporary in lieu of backend)
+      const stored = localStorage.getItem('users');
+      const users = stored ? JSON.parse(stored) : [];
 
-      // On success, navigate to login page
+      const duplicate = users.find((u) =>
+        u.email?.toLowerCase() === formData.email.trim().toLowerCase() ||
+        u.studentNumber === formData.studentNumber.trim() ||
+        u.idCardNumber === formData.idCardNumber.trim()
+      );
+      if (duplicate) {
+        setErrors((prev) => ({
+          ...prev,
+          email: duplicate.email?.toLowerCase() === formData.email.trim().toLowerCase() ? 'Email already registered' : prev.email,
+          studentNumber: duplicate.studentNumber === formData.studentNumber.trim() ? 'Student number already registered' : prev.studentNumber,
+          idCardNumber: duplicate.idCardNumber === formData.idCardNumber.trim() ? 'ID card number already registered' : prev.idCardNumber,
+        }));
+        return;
+      }
+
+      const newUser = {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        // NOTE: In production, never store plaintext passwords.
+        password: formData.password,
+        idCardNumber: formData.idCardNumber.trim(),
+        studentNumber: formData.studentNumber.trim(),
+        role: 'student',
+        createdAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem('users', JSON.stringify([...users, newUser]));
+
+      // Navigate to login
       navigate('/login', { replace: true });
     } finally {
       setSubmitting(false);
@@ -285,6 +315,43 @@ function Register() {
                   )}
                 </div>
             </>
+
+            {/* Consents */}
+            <div className="field" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <input
+                id="termsAccepted"
+                name="termsAccepted"
+                type="checkbox"
+                checked={formData.termsAccepted}
+                onChange={handleInputChange}
+                aria-invalid={Boolean(errors.termsAccepted)}
+                aria-describedby="termsAccepted-error"
+              />
+              <label htmlFor="termsAccepted">I agree to the Terms and Conditions</label>
+            </div>
+            {errors.termsAccepted && (
+              <span id="termsAccepted-error" className="error-message" role="alert">
+                {errors.termsAccepted}
+              </span>
+            )}
+
+            <div className="field" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <input
+                id="dataProcessingAccepted"
+                name="dataProcessingAccepted"
+                type="checkbox"
+                checked={formData.dataProcessingAccepted}
+                onChange={handleInputChange}
+                aria-invalid={Boolean(errors.dataProcessingAccepted)}
+                aria-describedby="dataProcessingAccepted-error"
+              />
+              <label htmlFor="dataProcessingAccepted">I authorize processing of my data</label>
+            </div>
+            {errors.dataProcessingAccepted && (
+              <span id="dataProcessingAccepted-error" className="error-message" role="alert">
+                {errors.dataProcessingAccepted}
+              </span>
+            )}
 
             <button type="submit" className="btn-primary" disabled={submitting}>
               {submitting ? 'Creating account…' : 'Create Account'}

@@ -35,10 +35,26 @@ function StudentLogin() {
 
     setSubmitting(true);
     try {
-      // Simulate an API call. Replace with real auth later.
-      await new Promise((res) => setTimeout(res, 600));
+      // Validate from localStorage (temporary in lieu of backend)
+      const stored = localStorage.getItem('users');
+      const users = stored ? JSON.parse(stored) : [];
+      const user = users.find((u) => u.studentNumber === idNumber.trim());
 
-      // On success, navigate to dashboard
+      if (!user || user.password !== password) {
+        setErrors({ idNumber: user ? '' : 'Account not found', password: user ? 'Incorrect password' : '' });
+        return;
+      }
+
+      // Store session
+      localStorage.setItem('currentUser', JSON.stringify({
+        email: user.email,
+        studentNumber: user.studentNumber,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role || 'student',
+        loggedInAt: new Date().toISOString(),
+      }));
+
       navigate('/dashboard', { replace: true });
     } finally {
       setSubmitting(false);

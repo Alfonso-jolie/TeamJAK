@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './studentlogin.css';
+import { authService } from '../services/authService';
+import { validateLoginForm } from '../utils/validation';
+import { ERROR_MESSAGES } from '../constants';
 
 function StudentLogin() {
   const navigate = useNavigate();
@@ -10,23 +13,10 @@ function StudentLogin() {
   const [submitting, setSubmitting] = useState(false);
 
   const validate = () => {
-    const next = { idNumber: '', password: '' };
-
-    // Basic example validation: numeric ID, length 6-12; password min length 6
-    if (!idNumber.trim()) {
-      next.idNumber = 'ID number is required';
-    } else if (!/^\d{6,12}$/.test(idNumber.trim())) {
-      next.idNumber = 'Enter a valid 6-12 digit ID number';
-    }
-
-    if (!password) {
-      next.password = 'Password is required';
-    } else if (password.length < 6) {
-      next.password = 'Password must be at least 6 characters';
-    }
-
-    setErrors(next);
-    return !next.idNumber && !next.password;
+    const formData = { idNumber, password };
+    const validationErrors = validateLoginForm(formData);
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
@@ -35,27 +25,24 @@ function StudentLogin() {
 
     setSubmitting(true);
     try {
-      // Validate from localStorage (temporary in lieu of backend)
-      const stored = localStorage.getItem('users');
-      const users = stored ? JSON.parse(stored) : [];
-      const user = users.find((u) => u.studentNumber === idNumber.trim());
-
-      if (!user || user.password !== password) {
-        setErrors({ idNumber: user ? '' : 'Account not found', password: user ? 'Incorrect password' : '' });
-        return;
+      // Use authentication service (fallback to localStorage for demo)
+      const result = await authService.loginDemo(idNumber.trim(), password);
+      
+      if (result.success) {
+        navigate('/dashboard', { replace: true });
+      } else {
+        // Handle login errors
+        if (result.error === 'User not found') {
+          setErrors({ idNumber: 'Account not found', password: '' });
+        } else if (result.error === 'Incorrect password') {
+          setErrors({ idNumber: '', password: 'Incorrect password' });
+        } else {
+          setErrors({ idNumber: ERROR_MESSAGES.LOGIN_FAILED, password: '' });
+        }
       }
-
-      // Store session
-      localStorage.setItem('currentUser', JSON.stringify({
-        email: user.email,
-        studentNumber: user.studentNumber,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role || 'student',
-        loggedInAt: new Date().toISOString(),
-      }));
-
-      navigate('/dashboard', { replace: true });
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrors({ idNumber: ERROR_MESSAGES.LOGIN_FAILED, password: '' });
     } finally {
       setSubmitting(false);
     }

@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Register.css';
+import { authService } from '../services/authService';
+import { validateRegistrationForm } from '../utils/validation';
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../constants';
 
 function Register() {
   const navigate = useNavigate();
@@ -48,57 +51,9 @@ function Register() {
   };
 
   const validate = () => {
-    const newErrors = {};
-
-    // Basic field validation
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
-    }
-
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    // Student fields (always required now)
-    if (!formData.idCardNumber.trim()) {
-      newErrors.idCardNumber = 'ID card number is required';
-    } else if (!/^\d{6,12}$/.test(formData.idCardNumber.trim())) {
-      newErrors.idCardNumber = 'Enter a valid 6-12 digit ID card number';
-    }
-
-    if (!formData.studentNumber.trim()) {
-      newErrors.studentNumber = 'Student number is required';
-    } else if (!/^\d{6,12}$/.test(formData.studentNumber.trim())) {
-      newErrors.studentNumber = 'Enter a valid 6-12 digit student number';
-    }
-
-    if (!formData.termsAccepted) {
-      newErrors.termsAccepted = 'You must agree to the terms and conditions';
-    }
-    if (!formData.dataProcessingAccepted) {
-      newErrors.dataProcessingAccepted = 'You must authorize data processing';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const validationErrors = validateRegistrationForm(formData);
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
@@ -107,41 +62,27 @@ function Register() {
 
     setSubmitting(true);
     try {
-      // Persist user locally (temporary in lieu of backend)
-      const stored = localStorage.getItem('users');
-      const users = stored ? JSON.parse(stored) : [];
-
-      const duplicate = users.find((u) =>
-        u.email?.toLowerCase() === formData.email.trim().toLowerCase() ||
-        u.studentNumber === formData.studentNumber.trim() ||
-        u.idCardNumber === formData.idCardNumber.trim()
-      );
-      if (duplicate) {
-        setErrors((prev) => ({
-          ...prev,
-          email: duplicate.email?.toLowerCase() === formData.email.trim().toLowerCase() ? 'Email already registered' : prev.email,
-          studentNumber: duplicate.studentNumber === formData.studentNumber.trim() ? 'Student number already registered' : prev.studentNumber,
-          idCardNumber: duplicate.idCardNumber === formData.idCardNumber.trim() ? 'ID card number already registered' : prev.idCardNumber,
-        }));
-        return;
+      // Use Firebase authentication (fallback to localStorage for demo)
+      const result = await authService.registerDemo(formData);
+      
+      if (result.success) {
+        // Navigate to login on success
+        navigate('/login', { replace: true });
+      } else {
+        // Handle specific errors
+        if (result.duplicateFields) {
+          const duplicateErrors = {};
+          if (result.duplicateFields.email) duplicateErrors.email = 'Email already registered';
+          if (result.duplicateFields.studentNumber) duplicateErrors.studentNumber = 'Student number already registered';
+          if (result.duplicateFields.idCardNumber) duplicateErrors.idCardNumber = 'ID card number already registered';
+          setErrors(duplicateErrors);
+        } else {
+          setErrors({ general: result.error || ERROR_MESSAGES.REGISTRATION_FAILED });
+        }
       }
-
-      const newUser = {
-        firstName: formData.firstName.trim(),
-        lastName: formData.lastName.trim(),
-        email: formData.email.trim(),
-        // NOTE: In production, never store plaintext passwords.
-        password: formData.password,
-        idCardNumber: formData.idCardNumber.trim(),
-        studentNumber: formData.studentNumber.trim(),
-        role: 'student',
-        createdAt: new Date().toISOString(),
-      };
-
-      localStorage.setItem('users', JSON.stringify([...users, newUser]));
-
-      // Navigate to login
-      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error('Registration error:', error);
+      setErrors({ general: ERROR_MESSAGES.REGISTRATION_FAILED });
     } finally {
       setSubmitting(false);
     }
@@ -350,6 +291,12 @@ function Register() {
             {errors.dataProcessingAccepted && (
               <span id="dataProcessingAccepted-error" className="error-message" role="alert">
                 {errors.dataProcessingAccepted}
+              </span>
+            )}
+
+            {errors.general && (
+              <span className="error-message" role="alert" style={{ textAlign: 'center', display: 'block', marginBottom: '1rem' }}>
+                {errors.general}
               </span>
             )}
 

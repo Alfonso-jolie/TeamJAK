@@ -2,11 +2,11 @@
 
 // Navigation sections
 export const DASHBOARD_SECTIONS = [
-  { key: 'topup', label: 'Points Top-up' },
-  { key: 'expense', label: 'Expense Tracking' },
-  { key: 'balance', label: 'Points Balance' },
-  { key: 'support', label: 'Support Request' },
-  { key: 'password', label: 'Change Password' },
+  { key: 'topup', label: 'Points Top-up', icon: '💰' },
+  { key: 'expense', label: 'Expense Tracking', icon: '📊' },
+  { key: 'balance', label: 'Points Balance', icon: '💳' },
+  { key: 'support', label: 'Support Request', icon: '❓' },
+  { key: 'password', label: 'Change Password', icon: '🔒' },
 ];
 
 // Payment methods configuration

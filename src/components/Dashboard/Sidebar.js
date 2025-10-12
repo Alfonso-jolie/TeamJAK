@@ -15,6 +15,7 @@ const Sidebar = ({ activeSection, onSectionChange, onLogout }) => {
             className={`nav-link ${activeSection === section.key ? 'active' : ''}`}
             onClick={() => onSectionChange(section.key)}
           >
+            <span className="nav-icon">{section.icon}</span>
             <span className="nav-text">{section.label}</span>
           </button>
         ))}

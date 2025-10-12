@@ -51,6 +51,13 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
+      <div className="header-bar">
+        <div className="header-logo">
+          <span className="logo-icon">❖</span>
+          <h1 className="header-title">Paytap</h1>
+        </div>
+      </div>
+
       <Sidebar 
         activeSection={activeSection}
         onSectionChange={handleSectionChange}

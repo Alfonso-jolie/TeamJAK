@@ -40,7 +40,7 @@
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: var(--bg-primary);
+  background: #222222;
   padding: var(--space-7) var(--space-6);
 }
 
@@ -106,8 +106,8 @@
 
 .input::placeholder { color: rgba(0, 0, 0, 0.55); }
 .input:focus { 
-  border-color: var(--accent-green); 
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); 
+  border-color: #20B2AA; 
+  box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.1); 
 }
 
 .auth-links {
@@ -117,7 +117,7 @@
 }
 
 .link {
-  color: var(--accent-green);
+  color: #20B2AA;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
@@ -125,7 +125,7 @@
 
 .link:hover { 
   text-decoration: underline;
-  color: #059669;
+  color: #1a9b94;
 }
 
 /* Accessibility helper */
@@ -156,8 +156,8 @@
 .btn-primary {
   appearance: none;
   border: none;
-  background: var(--accent-green);
-  color: var(--text-primary);
+  background: #20B2AA;
+  color: #ffffff;
   font-weight: 700;
   font-size: 16px;
   padding: var(--space-3) var(--space-5);
@@ -168,7 +168,7 @@
 }
 
 .btn-primary:hover { 
-  background: #059669;
+  background: #1a9b94;
   transform: translateY(-1px);
   box-shadow: var(--shadow-medium);
 }

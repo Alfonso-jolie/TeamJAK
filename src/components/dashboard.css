@@ -35,7 +35,7 @@
 
 .dashboard-container {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 280px 1fr;
   min-height: 100vh;
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -43,12 +43,12 @@
 
 /* Sidebar */
 .sidebar {
-  background: var(--bg-sidebar);
-  border-right: 1px solid var(--border-light);
-  padding: var(--space-6);
+  background: var(--bg-primary);
+  border-right: none;
+  padding: 24px 20px;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: var(--space-6);
+  gap: 24px;
 }
 
 .logo-section { display: grid; place-items: center; }
@@ -58,48 +58,60 @@
   object-fit: contain;
 }
 
-.nav-links { display: grid; gap: 4px; }
+.nav-links { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 15px; 
+}
 .nav-link {
   appearance: none;
   display: block;
   width: 100%;
   text-align: left;
-  padding: 0;
-  color: var(--text-primary);
+  padding: 12px 0;
+  color: #ffffff;
   background: transparent;
   border: none;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 600;
   transition: all 0.2s ease;
+  font-size: 16px;
 }
 
 .nav-text {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-size: 18px;
-  line-height: 1.0;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
 }
 .nav-link:hover { 
-  color: var(--text-primary);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 .nav-link.active {
-  color: var(--text-primary);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .logout-btn {
   appearance: none;
-  border: 1px solid var(--border-medium);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   background: transparent;
-  color: var(--text-primary);
-  border-radius: var(--radius-2);
-  padding: var(--space-3) var(--space-4);
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 12px 16px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease;
 }
 .logout-btn:hover {
-  background: var(--bg-secondary);
-  border-color: var(--accent-green);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* Main content surface */

@@ -2,7 +2,7 @@
 
 // Navigation sections
 export const DASHBOARD_SECTIONS = [
-  { key: 'topup', label: 'Points Topup' },
+  { key: 'topup', label: 'Points Top-up' },
   { key: 'expense', label: 'Expense Tracking' },
   { key: 'balance', label: 'Points Balance' },
   { key: 'support', label: 'Support Request' },

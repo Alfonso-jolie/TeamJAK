@@ -1,7 +1,7 @@
 /* Global Dark Theme System */
 :root {
   /* Dark Theme Colors */
-  --bg-primary: #1a1a1a;
+  --bg-primary: #25313D; /* updated to blue */
   --bg-secondary: #2d2d2d;
   --bg-card: #ffffff;
   --bg-sidebar: #1e1e1e;

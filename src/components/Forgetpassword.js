@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './Forgetpassword.css';
-import PaytapImage from '../design/Paytap.png';
 
 function ForgetPassword() {
   const navigate = useNavigate();
@@ -55,7 +54,6 @@ function ForgetPassword() {
       <main className="forgot-page">
         <section className="forgot-card" aria-label="Password reset confirmation">
           <div className="forgot-left">
-            <img src={PaytapImage} alt="PayTap graphic" className="brand-graphic" />
             <div className="brand-text">
               <h1 className="portal-title">PayTap | Portal</h1>
               <p className="school-name">De La Salle Lipa</p>
@@ -100,7 +98,6 @@ function ForgetPassword() {
     <main className="forgot-page">
       <section className="forgot-card" aria-label="Forgot password">
         <div className="forgot-left">
-          <img src={PaytapImage} alt="PayTap graphic" className="brand-graphic" />
           <div className="brand-text">
             <h1 className="portal-title">PayTap | Portal</h1>
             <p className="school-name">De La Salle Lipa</p>

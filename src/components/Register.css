@@ -40,7 +40,7 @@
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: var(--bg-primary);
+  background: #2C3E50;
   padding: var(--space-7) var(--space-6);
 }
 

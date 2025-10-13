@@ -2,19 +2,22 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './studentlogin.css';
 import { authService } from '../services/authService';
-import { validateLoginForm } from '../utils/validation';
+import { validateEmail, validatePassword } from '../utils/validation';
 import { ERROR_MESSAGES } from '../constants';
 
 function StudentLogin() {
   const navigate = useNavigate();
-  const [idNumber, setIdNumber] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({ idNumber: '', password: '' });
+  const [errors, setErrors] = useState({ email: '', password: '' });
   const [submitting, setSubmitting] = useState(false);
 
   const validate = () => {
-    const formData = { idNumber, password };
-    const validationErrors = validateLoginForm(formData);
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+    const validationErrors = {};
+    if (emailError) validationErrors.email = emailError;
+    if (passwordError) validationErrors.password = passwordError;
     setErrors(validationErrors);
     return Object.keys(validationErrors).length === 0;
   };
@@ -26,23 +29,23 @@ function StudentLogin() {
     setSubmitting(true);
     try {
       // Use authentication service (fallback to localStorage for demo)
-      const result = await authService.loginDemo(idNumber.trim(), password);
+      const result = await authService.loginDemo(email.trim(), password);
       
       if (result.success) {
         navigate('/dashboard', { replace: true });
       } else {
         // Handle login errors
         if (result.error === 'User not found') {
-          setErrors({ idNumber: 'Account not found', password: '' });
+          setErrors({ email: 'Account not found', password: '' });
         } else if (result.error === 'Incorrect password') {
-          setErrors({ idNumber: '', password: 'Incorrect password' });
+          setErrors({ email: '', password: 'Incorrect password' });
         } else {
-          setErrors({ idNumber: ERROR_MESSAGES.LOGIN_FAILED, password: '' });
+          setErrors({ email: ERROR_MESSAGES.LOGIN_FAILED, password: '' });
         }
       }
     } catch (error) {
       console.error('Login error:', error);
-      setErrors({ idNumber: ERROR_MESSAGES.LOGIN_FAILED, password: '' });
+      setErrors({ email: ERROR_MESSAGES.LOGIN_FAILED, password: '' });
     } finally {
       setSubmitting(false);
     }
@@ -50,65 +53,67 @@ function StudentLogin() {
 
   return (
     <main className="login-page">
-      <section className="login-card" aria-label="Student login">
-        <div className="login-left">
-          <div className="brand-text">
-            <h1 className="portal-title">PayTap | Portal</h1>
-            <p className="school-name">De La Salle Lipa</p>
+      <header className="app-header">
+        <div className="brand-dot" aria-hidden="true"></div>
+        <h1 className="app-title">Paytap</h1>
+      </header>
+      <section className="login-card" aria-label="Login">
+        <form className="login-form" onSubmit={handleSubmit} noValidate>
+          <h2 className="form-title">Login</h2>
+
+          <div className="field">
+            <label htmlFor="email" className="label">Email address</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="Enter email"
+              className="input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby="email-error"
+            />
+            {errors.email && (
+              <span id="email-error" role="alert" className="error-text">
+                {errors.email}
+              </span>
+            )}
           </div>
-        </div>
-        <div className="login-right">
-          <form className="login-form" onSubmit={handleSubmit} noValidate>
-            <div className="field">
-              <label htmlFor="idNumber" className="sr-only">ID number</label>
-              <input
-                id="idNumber"
-                type="text"
-                placeholder="Enter your ID number"
-                className="input"
-                inputMode="numeric"
-                value={idNumber}
-                onChange={(e) => setIdNumber(e.target.value)}
-                aria-invalid={Boolean(errors.idNumber)}
-                aria-describedby="idNumber-error"
-              />
-              {errors.idNumber && (
-                <span id="idNumber-error" role="alert" style={{ color: '#b42318', fontSize: 13 }}>
-                  {errors.idNumber}
-                </span>
-              )}
-            </div>
 
-            <div className="field">
-              <label htmlFor="password" className="sr-only">Password</label>
-              <input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
-                className="input"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                aria-invalid={Boolean(errors.password)}
-                aria-describedby="password-error"
-              />
-              {errors.password && (
-                <span id="password-error" role="alert" style={{ color: '#b42318', fontSize: 13 }}>
-                  {errors.password}
-                </span>
-              )}
-            </div>
+          <div className="field">
+            <label htmlFor="password" className="label">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter password"
+              className="input"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              aria-invalid={Boolean(errors.password)}
+              aria-describedby="password-error"
+            />
+            {errors.password && (
+              <span id="password-error" role="alert" className="error-text">
+                {errors.password}
+              </span>
+            )}
+          </div>
 
-            <button type="submit" className="btn-primary" disabled={submitting}>
-              {submitting ? 'Signing in…' : 'Login'}
-            </button>
+          <button type="submit" className="btn-primary" disabled={submitting}>
+            {submitting ? 'Submitting…' : 'Submit'}
+          </button>
 
-            <div className="auth-links">
-              <Link to="/register" className="link">Register</Link>
-              <Link to="/forgot-password" className="link">Forgot Password?</Link>
-            </div>
-          </form>
-        </div>
+          <div className="divider" aria-hidden="true"></div>
+
+          <p className="partner-text">Looking to partner with PayTap Service?</p>
+          {/* Vendor CTA intentionally omitted as requested */}
+
+          <div className="auth-links">
+            <Link to="/register" className="link">Register</Link>
+            <Link to="/forgot-password" className="link">Forgot Password?</Link>
+          </div>
+        </form>
       </section>
     </main>
   );

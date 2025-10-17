@@ -1,0 +1,28 @@
+/* Points Top-Up dedicated styles - optional wrapper if you want to move/override */
+/* If you want to fully separate, you can copy rules from pointsTopup.css here
+   and import this file instead. Right now it's a hook for future overrides. */
+
+.points-topup-wrapper {}
+.points-topup-content {}
+.section {}
+.form-label {}
+.form-input {}
+.btn-primary {}
+.btn-secondary {}
+.payment-method-selection {}
+.payment-options {}
+.payment-card {}
+.payment-logo {}
+.payment-card.selected {}
+.points-info {}
+.table {}
+.no-data {}
+.status-indicator {}
+.status-dot {}
+.qr-container {}
+.proof-preview {}
+.modal-overlay {}
+.modal-box {}
+.modal-actions {}
+.cancel-btn {}
+

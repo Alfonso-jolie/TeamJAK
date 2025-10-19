@@ -11,6 +11,7 @@ import PointsTopup from './StudentAccess/PointsTopUp';
 import Expense from './StudentAccess/ExpenseTracking';
 import PointsBalance from './StudentAccess/PointsBalance';
 import EditProfile from './StudentAccess/EditProfile';
+import ForgotPassword from './StudentAccess/ForgotPassword';
 import TransactionHistory from './Features/TransactionHistory';
 import SupportRequest from './StudentAccess/SupportRequest';
 import AdminSupportDashboard from './Features/AdminSupportDashboard';
@@ -27,6 +28,7 @@ function AppLayout() {
         <Route path="/Topup" element={<PointsTopup />} />  
         <Route path="/PointsBalance" element={<PointsBalance />} />
         <Route path="/EditProfile" element={<EditProfile />} />
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
         <Route path="/AdminSupport" element={<AdminSupportDashboard />} />  
         <Route path="/Support" element={<SupportRequest />} />  
         <Route path="/CashConvert" element={<CashConversion />} />

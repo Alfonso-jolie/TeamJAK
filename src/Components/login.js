@@ -114,6 +114,24 @@ function Login() {
             </button>
           </div>
 
+          <div className="login-links">
+            <button 
+              type="button" 
+              className="forgot-password-link"
+              onClick={() => navigate("/ForgotPassword")}
+            >
+              Forgot Password?
+            </button>
+            
+            <button 
+              type="button" 
+              className="admin-login-btn"
+              onClick={() => navigate("/AdminLogin")}
+            >
+              Admin Login
+            </button>
+          </div>
+
           {/* ✅ Add vendor registration link */}
           <div className="vendor-registration-link">
             <p>Looking to partner with PayTap Service?</p>

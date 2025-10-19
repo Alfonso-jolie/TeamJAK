@@ -164,31 +164,6 @@ function EditProfile() {
           </section>
         )}
 
-        <section className="section">
-          <h2>Edit Profile</h2>
-
-          <label className="form-label" htmlFor="display-name">Display Name</label>
-          <input
-            id="display-name"
-            className="form-input"
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="Your name"
-          />
-
-          <label className="form-label" htmlFor="photo-url">Photo URL</label>
-          <input
-            id="photo-url"
-            className="form-input"
-            value={photoURL}
-            onChange={(e) => setPhotoURL(e.target.value)}
-            placeholder="https://..."
-          />
-
-          <button className="btn-primary" onClick={handleSaveProfile} disabled={savingProfile}>
-            {savingProfile ? 'Saving...' : 'Save Profile'}
-          </button>
-        </section>
 
         <section className="section">
           <h3>Account Email</h3>
